@@ -37,26 +37,27 @@ def read_log():
                 all_addreses.add(ip_addr)
             
         return all_addreses
-                
+    
+ 
 def save_ip(ip_data, conn):
     #zapis ip do bazy, tutaj też zależy co jakie pola będziemy mieć w bazie 
     cursor = conn.cursor()
     cursor.execute("INSERT INTO reputation(ip_addr, reputation) VALUES(?,?)", (ip_data["src_ip"], ip_data["reputation"]))
     conn.commit()
 
-def check_ip(analyser, ip, conn):
-    #sprawdzenie reputacji ip
-    cursor = conn.cursor()
-    cursor.execute("SELECT reputation FROM reputation WHERE ip_addr==?", (ip,))
-    ip_data = cursor.fetchone()
-    if len(ip_data)==0:
-        #jeśli nie ma w bazie to sprawdza virustotal i dodaje do bazy
-        ip_reputation = analyser.info_ip(ip)
-        save_ip(ip_reputation, conn)
-        return ip_reputation
-    else:
-        #jeśli jest w bazie to zwraca to co zapiszemy
-        return ip_data
+#def check_ip(analyser, ip, conn):
+#    #sprawdzenie reputacji ip
+#    cursor = conn.cursor()
+#    cursor.execute("SELECT reputation FROM reputation WHERE ip_addr==?", (ip,))
+#    ip_data = cursor.fetchone()
+#    if len(ip_data)==0:
+#        #jeśli nie ma w bazie to sprawdza virustotal i dodaje do bazy
+#        ip_reputation = analyser.info_ip(ip)
+#        save_ip(ip_reputation, conn)
+#        return ip_reputation
+#    else:
+#        #jeśli jest w bazie to zwraca to co zapiszemy
+#        return ip_data
 
 
 if __name__=="__main__":
@@ -64,4 +65,7 @@ if __name__=="__main__":
     key = os.getenv("API_KEY")
     ip_analyser = core.IP(api_key = key)
     addresses = read_log()
-    print(len(addresses))
+    with open("results.json", "a") as res:
+        for ip in addresses:
+            result = ip_analyser.info_ip(ip)
+            res.write(result + "\n")
