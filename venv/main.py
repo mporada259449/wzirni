@@ -29,16 +29,14 @@ def read_log():
     #jak coś to te logi są tak zrobione że każda linia jest osobnym jsonem
     #zwraca listę ze wszystkimi adresami
     with open("venv/cowrie.json", "r") as log:
-        all_addreses = []
+        all_addreses = set()
         for i in log.readlines():
             event_data = json.loads(i)
-            try:
+            if event_data["eventid"]=="cowrie.session.connect":
                 ip_addr = event_data["src_ip"]
-                all_addreses.append(ip_addr)
-            except:
-                continue
-
-            return all_addreses
+                all_addreses.add(ip_addr)
+            
+        return all_addreses
                 
 def save_ip(ip_data, conn):
     #zapis ip do bazy, tutaj też zależy co jakie pola będziemy mieć w bazie 
@@ -65,3 +63,5 @@ if __name__=="__main__":
     load_dotenv()
     key = os.getenv("API_KEY")
     ip_analyser = core.IP(api_key = key)
+    addresses = read_log()
+    print(len(addresses))
