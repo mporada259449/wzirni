@@ -20,6 +20,8 @@ def read_log():
         return all_addreses
 
 if __name__=="__main__":
+    print_addresses = True # May have some performance impact
+    
     load_dotenv()
     key = os.getenv("API_KEY")
     ip_analyser = core.IP(api_key = key)
@@ -27,7 +29,8 @@ if __name__=="__main__":
     addressespath = input("Input address file path/name [source/addresses.txt]: ") or "source/addresses.txt"
     
     addresses = [line.strip() for line in open(addressespath, 'r')]
-    print(f"Found {len(addresses)} unique IP addresses")
+    address_count = len(addresses)
+    print(f"Found {address_count} unique IP addresses")
     
     result = []
     
@@ -35,10 +38,12 @@ if __name__=="__main__":
     
     
     print("Starting analysis...")
+    i = 1
     for ip in addresses:
-        print(f"Analysing IP: {ip}")
+        print(f"Analysing IP: {ip} [{i}/{address_count}]") if print_addresses else None
         analysis_result = ip_analyser.info_ip(ip)
         result.append(analysis_result)
+        i += 1
     print("Analysis finished.")
     
     
