@@ -2,27 +2,27 @@ import virustotal3.core as core
 from dotenv import load_dotenv
 import os
 import json
-import sqlite3
-def create_database():
-    #stworzenie bazy danych jeśli jej jeszcze nie ma
-    #zwraca połączenie do bazy
-    if not os.path.isfile("venv/database.db"):
-        conn = sqlite3.connect("venv/database.db")
-        cursor = conn.cursor()
-        #tutaj trzeba ogarnąć jakie konkretnie dane chcemy zapisać
-        cursor.execute(
-            """CREATE TABLE reputation(
-            ip_addr TEXT,
-            reputation TEXT
-            )
-            """
-        )
-        conn.commit()
-        return conn
-    else:
-        return sqlite3.connect("database.db")
-
-
+#import sqlite3
+##def create_database():
+#    #stworzenie bazy danych jeśli jej jeszcze nie ma
+#    #zwraca połączenie do bazy
+#    if not os.path.isfile("venv/database.db"):
+#        conn = sqlite3.connect("venv/database.db")
+#        cursor = conn.cursor()
+#        #tutaj trzeba ogarnąć jakie konkretnie dane chcemy zapisać
+#        cursor.execute(
+#            """CREATE TABLE reputation(
+#            ip_addr TEXT,
+#            reputation TEXT
+#            )
+#            """
+#        )
+#        conn.commit()
+#        return conn
+#    else:
+#        return sqlite3.connect("database.db")
+#
+#
 
 def read_log():
     #odczytanie adresów z logu
@@ -39,11 +39,11 @@ def read_log():
         return all_addreses
     
  
-def save_ip(ip_data, conn):
-    #zapis ip do bazy, tutaj też zależy co jakie pola będziemy mieć w bazie 
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO reputation(ip_addr, reputation) VALUES(?,?)", (ip_data["src_ip"], ip_data["reputation"]))
-    conn.commit()
+#def save_ip(ip_data, conn):
+#    #zapis ip do bazy, tutaj też zależy co jakie pola będziemy mieć w bazie 
+#    cursor = conn.cursor()
+#    cursor.execute("INSERT INTO reputation(ip_addr, reputation) VALUES(?,?)", (ip_data["src_ip"], ip_data["reputation"]))
+#    conn.commit()
 
 #def check_ip(analyser, ip, conn):
 #    #sprawdzenie reputacji ip
